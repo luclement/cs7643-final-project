@@ -244,13 +244,17 @@ def gram(x):
     x = tf.reshape(x, [b, -1, c])
     return tf.matmul(tf.transpose(x, [0, 2, 1]), x) / tf.cast((tf.size(x) // b), tf.float32)
 
-def con_loss(vgg, real, fake):
+def con_loss(vgg, real, fake, featex):
 
-    vgg.build(real)
-    real_feature_map = vgg.conv4_4_no_activation
 
-    vgg.build(fake)
-    fake_feature_map = vgg.conv4_4_no_activation
+    if featex == "vgg16":
+        real_feature_map = vgg(real)
+        fake_feature_map = vgg(fake)
+    else:
+        vgg.build(real)
+        real_feature_map = vgg.conv4_4_no_activation
+        vgg.build(fake)
+        fake_feature_map = vgg.conv4_4_no_activation
 
     loss = L1_loss(real_feature_map, fake_feature_map)
 
@@ -260,16 +264,22 @@ def con_loss(vgg, real, fake):
 def style_loss(style, fake):
     return L1_loss(gram(style), gram(fake))
 
-def con_sty_loss(vgg, real, anime, fake):
+def con_sty_loss(vgg, real, anime, fake, featex):
 
-    vgg.build(real)
-    real_feature_map = vgg.conv4_4_no_activation
-
-    vgg.build(fake)
-    fake_feature_map = vgg.conv4_4_no_activation
-
-    vgg.build(anime[:fake_feature_map.shape[0]])
-    anime_feature_map = vgg.conv4_4_no_activation
+    if featex == "vgg16":
+        real_feature_map = vgg(real)
+        fake_feature_map = vgg(fake)
+        anime_feature_map = vgg(anime[:fake_feature_map.shape[0]])
+    else:
+        vgg.build(real)
+        real_feature_map = vgg.conv4_4_no_activation
+        
+        vgg.build(fake)
+        fake_feature_map = vgg.conv4_4_no_activation
+        
+        vgg.build(anime[:fake_feature_map.shape[0]])
+        anime_feature_map = vgg.conv4_4_no_activation
+    
 
     c_loss = L1_loss(real_feature_map, fake_feature_map)
     s_loss = style_loss(anime_feature_map, fake_feature_map)

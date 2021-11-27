@@ -2,7 +2,7 @@ from AnimeGANv2 import AnimeGANv2
 import argparse
 from tools.utils import *
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 """parsing and configuration"""
 
@@ -11,8 +11,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('--phase', type=str, default='train', help='train or test ?')
     parser.add_argument('--dataset', type=str, default='Hayao', help='dataset_name')
-    parser.add_argument('--data_mean', type=list, default=[13.1360,-8.6698,-4.4661], help='data_mean(bgr) from data_mean.py')
+    parser.add_argument('--data_mean', nargs="*", type=float, default=[13.1360,-8.6698,-4.4661], help='data_mean(bgr) from data_mean.py')
     parser.add_argument('--light', action='store_true', default=False, help='Use generator_lite')
+    parser.add_argument('--featex', type=str, default='vgg19', help='select feature extractor: vgg19 or vgg16')
 
     parser.add_argument('--epoch', type=int, default=101, help='The number of epochs to run')
     parser.add_argument('--init_epoch', type=int, default=10, help='The number of epochs for weight initialization')
