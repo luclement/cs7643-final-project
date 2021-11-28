@@ -18,7 +18,7 @@ class AnimeGANv2(object) :
         self.log_dir = args.log_dir
         self.dataset_name = args.dataset
         self.data_mean = args.data_mean
-        self.featex = args.featex
+        self.featex_arg = args.featex
 
         self.light = args.light
         self.epoch = args.epoch
@@ -67,10 +67,14 @@ class AnimeGANv2(object) :
         self.anime_smooth_generator = ImageGenerator('./dataset/{}'.format(self.dataset_name + '/smooth'), self.img_size, self.batch_size, self.data_mean)
         self.dataset_num = max(self.real_image_generator.num_images, self.anime_image_generator.num_images)
 
-        if self.featex == "vgg16":
-            self.vgg = tf.keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+        if self.featex_arg == "vgg16":
+            self.featex = tf.keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+        elif self.featex_arg == "resnet50":
+            self.featex = tf.keras.applications.resnet50.ResNet50(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+        elif self.featex_arg == "mobilenetv2":
+            self.featex = tf.keras.applications.mobilenet_v2.MobileNetV2(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
         else:
-            self.vgg = Vgg19()
+            self.featex = Vgg19()
 
         print()
         print("##### Information #####")
@@ -163,13 +167,13 @@ class AnimeGANv2(object) :
             GP = 0.0
 
         # init pharse
-        init_c_loss = con_loss(self.vgg, self.real, self.generated, self.featex)
+        init_c_loss = con_loss(self.featex, self.real, self.generated, self.featex_arg)
         init_loss = self.con_weight * init_c_loss
         
         self.init_loss = init_loss
 
         # gan
-        c_loss, s_loss = con_sty_loss(self.vgg, self.real, self.anime_gray, self.generated, self.featex)
+        c_loss, s_loss = con_sty_loss(self.featex, self.real, self.anime_gray, self.generated, self.featex_arg)
         tv_loss = self.tv_weight * total_variation_loss(self.generated)
         t_loss = self.con_weight * c_loss + self.sty_weight * s_loss + color_loss(self.real,self.generated) * self.color_weight + tv_loss
 
