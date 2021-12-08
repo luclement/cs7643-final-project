@@ -11,7 +11,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('--phase', type=str, default='train', help='train or test ?')
     parser.add_argument('--dataset', type=str, default='Hayao', help='dataset_name')
-    parser.add_argument('--data_mean', nargs="*", type=float, default=[13.1360,-8.6698,-4.4661], help='data_mean(bgr) from data_mean.py')
+    parser.add_argument('--data_mean', nargs="*", type=float, default=[13.1360, -8.6698, -4.4661], help='data_mean(bgr) from data_mean.py')
     parser.add_argument('--light', action='store_true', default=False, help='Use generator_lite')
     parser.add_argument('--featex', type=str, default='vgg19', help='select feature extractor: vgg19, vgg16, resnet50, or mobilenetv2. default=vgg19')
 
