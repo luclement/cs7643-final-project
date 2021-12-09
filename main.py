@@ -2,6 +2,8 @@ from AnimeGANv2 import AnimeGANv2
 import argparse
 from tools.utils import *
 import os
+import tensorflow as tf
+from tensorflow.python.client import device_lib
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 """parsing and configuration"""
@@ -90,6 +92,9 @@ def main():
     args = parse_args()
     if args is None:
       exit()
+
+    print(device_lib.list_local_devices())
+    tf.debugging.set_log_device_placement(True)
 
     # open session
     gpu_options = tf.GPUOptions(allow_growth=True)

@@ -1,9 +1,5 @@
-source activate tensorflow_p37
-
 touch __init__.py
 touch tools/__init__.py
-
-pip install tqdm
 
 echo -e "\n##### Downloading vgg19 #####"
 wget -nc --directory-prefix=vgg19_weight/ https://github.com/TachibanaYoshino/AnimeGAN/releases/download/vgg16%2F19.npy/vgg19.npy

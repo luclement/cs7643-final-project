@@ -69,12 +69,16 @@ class AnimeGANv2(object) :
 
         if self.featex_arg == "vgg16":
             self.featex = tf.keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+            self.preprocessor = tf.keras.applications.vgg16.preprocess_input
         elif self.featex_arg == "resnet50":
             self.featex = tf.keras.applications.resnet50.ResNet50(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+            self.preprocessor = tf.keras.applications.resnet50.preprocess_input
         elif self.featex_arg == "mobilenetv2":
             self.featex = tf.keras.applications.mobilenet_v2.MobileNetV2(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+            self.preprocessor = tf.keras.applications.mobilenet_v2.preprocess_input
         else:
             self.featex = Vgg19()
+            self.preprocessor = None
 
         print()
         print("##### Information #####")
@@ -167,13 +171,13 @@ class AnimeGANv2(object) :
             GP = 0.0
 
         # init pharse
-        init_c_loss = con_loss(self.featex, self.real, self.generated, self.featex_arg)
+        init_c_loss = con_loss(self.featex, self.real, self.generated, self.featex_arg, self.preprocessor)
         init_loss = self.con_weight * init_c_loss
         
         self.init_loss = init_loss
 
         # gan
-        c_loss, s_loss = con_sty_loss(self.featex, self.real, self.anime_gray, self.generated, self.featex_arg)
+        c_loss, s_loss = con_sty_loss(self.featex, self.real, self.anime_gray, self.generated, self.featex_arg, self.preprocessor)
         tv_loss = self.tv_weight * total_variation_loss(self.generated)
         t_loss = self.con_weight * c_loss + self.sty_weight * s_loss + color_loss(self.real,self.generated) * self.color_weight + tv_loss
 

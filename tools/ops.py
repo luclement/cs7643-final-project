@@ -244,7 +244,7 @@ def gram(x):
     x = tf.reshape(x, [b, -1, c])
     return tf.matmul(tf.transpose(x, [0, 2, 1]), x) / tf.cast((tf.size(x) // b), tf.float32)
 
-def con_loss(featex, real, fake, featex_arg):
+def con_loss(featex, real, fake, featex_arg, preprocessor=None):
 
     if featex_arg == "vgg19":
         featex.build(real)
@@ -252,8 +252,10 @@ def con_loss(featex, real, fake, featex_arg):
         featex.build(fake)
         fake_feature_map = featex.conv4_4_no_activation
     else: # other feature extractor from TF model zoo
-        real_feature_map = featex(real)
-        fake_feature_map = featex(fake)
+        real_bgr = preprocessor(real)
+        fake_bgr = preprocessor(fake)
+        real_feature_map = featex(real_bgr)
+        fake_feature_map = featex(fake_bgr)
 
     loss = L1_loss(real_feature_map, fake_feature_map)
 
@@ -263,7 +265,7 @@ def con_loss(featex, real, fake, featex_arg):
 def style_loss(style, fake):
     return L1_loss(gram(style), gram(fake))
 
-def con_sty_loss(featex, real, anime, fake, featex_arg):
+def con_sty_loss(featex, real, anime, fake, featex_arg, preprocessor=None):
 
     if featex_arg == "vgg19":
         featex.build(real)
@@ -276,10 +278,11 @@ def con_sty_loss(featex, real, anime, fake, featex_arg):
         anime_feature_map = featex.conv4_4_no_activation
         
     else: # other feature extractor from TF model zoo
-        real_feature_map = featex(real)
-        fake_feature_map = featex(fake)
-        anime_feature_map = featex(anime[:fake_feature_map.shape[0]])
-    
+        real_bgr = preprocessor(real)
+        fake_bgr = preprocessor(fake)
+        real_feature_map = featex(real_bgr)
+        fake_feature_map = featex(fake_bgr)
+        anime_feature_map = featex(anime[:fake_feature_map.shape[0]]) 
 
     c_loss = L1_loss(real_feature_map, fake_feature_map)
     s_loss = style_loss(anime_feature_map, fake_feature_map)
