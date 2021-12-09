@@ -214,7 +214,7 @@ def discriminator_loss(loss_func, real, gray, fake, real_blur):
     # for Hayao : 1.2, 1.2, 1.2, 0.8
     # for Paprika : 1.0, 1.0, 1.0, 0.005
     # for Shinkai: 1.7, 1.7, 1.7, 1.0
-    loss = 1.7 * real_loss +  1.7 * fake_loss + 1.7 * gray_loss  +  1.0 * real_blur_loss
+    loss = 1.2 * real_loss +  1.2 * fake_loss + 1.2 * gray_loss  +  0.8 * real_blur_loss
 
     return loss
 
