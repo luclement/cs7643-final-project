@@ -251,6 +251,11 @@ def con_loss(featex, real, fake, featex_arg, preprocessor=None):
         real_feature_map = featex.conv4_4_no_activation
         featex.build(fake)
         fake_feature_map = featex.conv4_4_no_activation
+    elif featex_arg == "vgg16":
+        featex.build(real)
+        real_feature_map = featex.conv4_3_no_activation
+        featex.build(fake)
+        fake_feature_map = featex.conv4_3_no_activation
     else: # other feature extractor from TF model zoo
         real_bgr = preprocessor(real)
         fake_bgr = preprocessor(fake)
@@ -276,7 +281,15 @@ def con_sty_loss(featex, real, anime, fake, featex_arg, preprocessor=None):
         
         featex.build(anime[:fake_feature_map.shape[0]])
         anime_feature_map = featex.conv4_4_no_activation
-        
+    elif featex_arg == "vgg16":
+        featex.build(real)
+        real_feature_map = featex.conv4_3_no_activation
+
+        featex.build(fake)
+        fake_feature_map = featex.conv4_3_no_activation  
+
+        featex.build(anime[:fake_feature_map.shape[0]])
+        anime_feature_map = featex.conv4_3_no_activation      
     else: # other feature extractor from TF model zoo
         real_bgr = preprocessor(real)
         fake_bgr = preprocessor(fake)

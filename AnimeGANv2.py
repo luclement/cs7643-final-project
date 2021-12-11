@@ -7,6 +7,7 @@ import tensorflow as tf
 from net import generator,generator_lite
 from net.discriminator import D_net
 from tools.data_loader import ImageGenerator
+from tools.vgg16 import Vgg16
 from tools.vgg19 import Vgg19
 
 class AnimeGANv2(object) :
@@ -67,7 +68,7 @@ class AnimeGANv2(object) :
         self.anime_smooth_generator = ImageGenerator('./dataset/{}'.format(self.dataset_name + '/smooth'), self.img_size, self.batch_size, self.data_mean)
         self.dataset_num = max(self.real_image_generator.num_images, self.anime_image_generator.num_images)
 
-        if self.featex_arg == "vgg16":
+        if self.featex_arg == "vgg16_keras":
             self.featex = tf.keras.applications.vgg16.VGG16(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
             self.preprocessor = tf.keras.applications.vgg16.preprocess_input
         elif self.featex_arg == "resnet50":
@@ -76,6 +77,12 @@ class AnimeGANv2(object) :
         elif self.featex_arg == "mobilenetv2":
             self.featex = tf.keras.applications.mobilenet_v2.MobileNetV2(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
             self.preprocessor = tf.keras.applications.mobilenet_v2.preprocess_input
+        elif self.featex_arg == "vgg19_keras":
+            self.featex = tf.keras.applications.vgg19.VGG19(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
+            self.preprocessor = tf.keras.applications.vgg19.preprocess_input
+        elif self.featex_arg == "vgg16":
+            self.featex = Vgg16()
+            self.preprocessor = None
         else:
             self.featex = Vgg19()
             self.preprocessor = None
