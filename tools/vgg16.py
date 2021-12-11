@@ -5,7 +5,7 @@ import numpy as np
 import time
 import sys
 
-VGG_MEAN = [123.68, 116.779, 103.939]
+VGG_MEAN = [103.939, 116.779, 123.68]
 
 
 class Vgg16:
