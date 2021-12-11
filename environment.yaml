@@ -6,6 +6,7 @@ channels:
 dependencies:
   - python=3.6
   - tensorflow-gpu=1.15.0
+  - tensorflow-addons
   - h5py=2.10.0
   - numpy
   - opencv

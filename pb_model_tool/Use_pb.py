@@ -69,20 +69,20 @@ if __name__ =='__main__':
     test_img = load_test_data(img_path)
 
     # We start a session using a temporary fresh Graph
-    with tf.Session(graph=tf.Graph()) as sess:
+    with tf.compat.v1.Session(graph=tf.Graph()) as sess:
         '''
         You can provide 'tags' when saving a model,
         in my case I provided, tf.saved_model.tag_constants.SERVING tag 
         '''
 
-        meta_graph_def = tf.saved_model.loader.load(sess, [tf.saved_model.tag_constants.SERVING], pb_path)
+        meta_graph_def = tf.compat.v1.saved_model.loader.load(sess, [tf.saved_model.SERVING], pb_path)
         # get custom_signature from meta_graph_def
         signature = meta_graph_def.signature_def
         # Get alias of input and output
         x = signature[signature_key].inputs[input_key].name
         y = signature[signature_key].outputs[output_key].name
 
-        graph = tf.get_default_graph()
+        graph = tf.compat.v1.get_default_graph()
         """ print your graph's ops, if needed """
         # i = 0
         # for op in graph.get_operations():

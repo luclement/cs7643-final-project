@@ -29,19 +29,19 @@ def main(checkpoint_dir, style_name):
         ckpt_dir = '../checkpoint/' + 'generator_' + style_name + '_weight'
     check_folder(ckpt_dir)
 
-    placeholder = tf.placeholder(tf.float32, [1, None, None, 3], name='generator_input')
-    with tf.variable_scope("generator", reuse=False):
+    placeholder = tf.compat.v1.placeholder(tf.float32, [1, None, None, 3], name='generator_input')
+    with tf.compat.v1.variable_scope("generator", reuse=False):
         if 'lite' in checkpoint_dir:
             _ = generator_lite.G_net(placeholder).fake
         else:
             _ = generator.G_net(placeholder).fake
 
-    generator_var = [var for var in tf.trainable_variables() if var.name.startswith('generator')]
-    saver = tf.train.Saver(generator_var)
+    generator_var = [var for var in tf.compat.v1.trainable_variables() if var.name.startswith('generator')]
+    saver = tf.compat.v1.train.Saver(generator_var)
 
-    gpu_options = tf.GPUOptions(allow_growth=True)
-    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True, gpu_options=gpu_options)) as sess:
-        sess.run(tf.global_variables_initializer())
+    gpu_options = tf.compat.v1.GPUOptions(allow_growth=True)
+    with tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(allow_soft_placement=True, gpu_options=gpu_options)) as sess:
+        sess.run(tf.compat.v1.global_variables_initializer())
         # load model
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)  # checkpoint file information
         if ckpt and ckpt.model_checkpoint_path:

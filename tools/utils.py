@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.contrib import slim
+import tf_slim as slim
 from tools.adjust_brightness import adjust_brightness_from_src_to_dst, read_img
 import os,cv2
 import numpy as np
@@ -74,10 +74,10 @@ def random_crop(img1, img2, crop_H, crop_W):
 
 
 def show_all_variables():
-    model_vars = tf.trainable_variables()
+    model_vars = tf.compat.v1.trainable_variables()
     # slim.model_analyzer.analyze_vars(model_vars, print_info=True)
     print('G:')
-    slim.model_analyzer.analyze_vars([var for var in tf.trainable_variables() if var.name.startswith('generator')], print_info=True)
+    slim.model_analyzer.analyze_vars([var for var in tf.compat.v1.trainable_variables() if var.name.startswith('generator')], print_info=True)
     # print('D:')
     # slim.model_analyzer.analyze_vars([var for var in tf.trainable_variables() if var.name.startswith('discriminator')], print_info=True)
 

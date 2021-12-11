@@ -76,12 +76,12 @@ class ImageGenerator(object):
         dataset = dataset.shuffle(buffer_size=len(self.paths))
 
         # Map path to image 
-        dataset = dataset.map(lambda img: tf.py_func(
+        dataset = dataset.map(lambda img: tf.compat.v1.py_func(
             self.load_image, [img], [tf.float32,tf.float32]),
                               self.num_cpus)
 
         dataset = dataset.batch(self.batch_size)
 
-        img1,img2 = dataset.make_one_shot_iterator().get_next()
+        img1,img2 = tf.compat.v1.data.make_one_shot_iterator(dataset).get_next()
 
         return img1,img2

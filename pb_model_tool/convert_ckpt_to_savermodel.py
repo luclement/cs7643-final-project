@@ -26,25 +26,25 @@ if __name__ == '__main__':
     output_op = 'generator/G_MODEL/out_layer/Tanh:0'
 
     graph = tf.Graph()
-    config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
-    with tf.Session(graph=graph, config=config) as sess:
+    config = tf.compat.v1.ConfigProto(allow_soft_placement=True, log_device_placement=True)
+    with tf.compat.v1.Session(graph=graph, config=config) as sess:
         # Restore from checkpoint
-        loader = tf.train.import_meta_graph(trained_checkpoint_prefix + '.meta')
+        loader = tf.compat.v1.train.import_meta_graph(trained_checkpoint_prefix + '.meta')
         loader.restore(sess, trained_checkpoint_prefix)
 
         # the input and output in the ckpt
-        x = tf.get_default_graph().get_tensor_by_name(input_op)
-        y = tf.get_default_graph().get_tensor_by_name(output_op)
+        x = tf.compat.v1.get_default_graph().get_tensor_by_name(input_op)
+        y = tf.compat.v1.get_default_graph().get_tensor_by_name(output_op)
 
         # Export checkpoint to SavedModel
-        builder = tf.saved_model.builder.SavedModelBuilder(export_dir)
+        builder = tf.compat.v1.saved_model.builder.SavedModelBuilder(export_dir)
 
         # custom settings of the input and output in the pb
-        inputs = {'input': tf.saved_model.utils.build_tensor_info(x)}
-        outputs = {'output': tf.saved_model.utils.build_tensor_info(y)}
-        signature = tf.saved_model.signature_def_utils.build_signature_def(inputs, outputs, 'AnimeGANv2')
+        inputs = {'input': tf.compat.v1.saved_model.utils.build_tensor_info(x)}
+        outputs = {'output': tf.compat.v1.saved_model.utils.build_tensor_info(y)}
+        signature = tf.compat.v1.saved_model.signature_def_utils.build_signature_def(inputs, outputs, 'AnimeGANv2')
 
-        builder.add_meta_graph_and_variables(sess, [tf.saved_model.tag_constants.SERVING],{'custom_signature':signature})
+        builder.add_meta_graph_and_variables(sess, [tf.saved_model.SERVING],{'custom_signature':signature})
         builder.save()
 
         """

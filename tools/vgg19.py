@@ -79,16 +79,16 @@ class Vgg19:
         print(("build model finished: %fs" % (time.time() - start_time)))
 
     def avg_pool(self, bottom, name):
-        return tf.nn.avg_pool(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
+        return tf.nn.avg_pool2d(input=bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
 
     def max_pool(self, bottom, name):
-        return tf.nn.max_pool(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
+        return tf.nn.max_pool2d(input=bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
 
     def conv_layer(self, bottom, name):
-        with tf.variable_scope(name):
+        with tf.compat.v1.variable_scope(name):
             filt = self.get_conv_filter(name)
 
-            conv = tf.nn.conv2d(bottom, filt, [1, 1, 1, 1], padding='SAME')
+            conv = tf.nn.conv2d(input=bottom, filters=filt, strides=[1, 1, 1, 1], padding='SAME')
 
             conv_biases = self.get_bias(name)
             bias = tf.nn.bias_add(conv, conv_biases)
@@ -97,10 +97,10 @@ class Vgg19:
             return relu
 
     def no_activation_conv_layer(self, bottom, name):
-        with tf.variable_scope(name):
+        with tf.compat.v1.variable_scope(name):
             filt = self.get_conv_filter(name)
 
-            conv = tf.nn.conv2d(bottom, filt, [1, 1, 1, 1], padding='SAME')
+            conv = tf.nn.conv2d(input=bottom, filters=filt, strides=[1, 1, 1, 1], padding='SAME')
 
             conv_biases = self.get_bias(name)
             x = tf.nn.bias_add(conv, conv_biases)
@@ -108,7 +108,7 @@ class Vgg19:
             return x
 
     def fc_layer(self, bottom, name):
-        with tf.variable_scope(name):
+        with tf.compat.v1.variable_scope(name):
             shape = bottom.get_shape().as_list()
             dim = 1
             for d in shape[1:]:

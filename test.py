@@ -26,7 +26,7 @@ def parse_args():
     return parser.parse_args()
 
 def stats_graph(graph):
-    flops = tf.profiler.profile(graph, options=tf.profiler.ProfileOptionBuilder.float_operation())
+    flops = tf.compat.v1.profiler.profile(graph, options=tf.compat.v1.profiler.ProfileOptionBuilder.float_operation())
     # params = tf.profiler.profile(graph, options=tf.profiler.ProfileOptionBuilder.trainable_variables_parameter())
     print('FLOPs: {}'.format(flops.total_float_ops))
 
@@ -36,17 +36,17 @@ def test(checkpoint_dir, style_name, test_dir, if_adjust_brightness, img_size=[2
     check_folder(result_dir)
     test_files = glob('{}/*.*'.format(test_dir))
 
-    test_real = tf.placeholder(tf.float32, [1, None, None, 3], name='test')
+    test_real = tf.compat.v1.placeholder(tf.float32, [1, None, None, 3], name='test')
 
-    with tf.variable_scope("generator", reuse=False):
+    with tf.compat.v1.variable_scope("generator", reuse=False):
         if 'lite' in checkpoint_dir:
             test_generated = generator_lite.G_net(test_real).fake
         else:
             test_generated = generator.G_net(test_real).fake
-    saver = tf.train.Saver()
+    saver = tf.compat.v1.train.Saver()
 
-    gpu_options = tf.GPUOptions(allow_growth=True)
-    with tf.Session(config=tf.ConfigProto(allow_soft_placement=True, gpu_options=gpu_options)) as sess:
+    gpu_options = tf.compat.v1.GPUOptions(allow_growth=True)
+    with tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(allow_soft_placement=True, gpu_options=gpu_options)) as sess:
         # tf.global_variables_initializer().run()
         # load model
         ckpt = tf.train.get_checkpoint_state(checkpoint_dir)  # checkpoint file information

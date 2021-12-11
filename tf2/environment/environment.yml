@@ -1,9 +1,0 @@
-name: animegan
-channels:
-  - defaults
-dependencies:
-  - python=3.6
-  - numpy
-  - opencv
-  - tensorflow-gpu=1.15.0
-  - tqdm

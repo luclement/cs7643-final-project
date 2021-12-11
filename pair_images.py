@@ -7,7 +7,7 @@ import yaml
 
 img_original_dir = "results/test_set_original"
 img_style_1_dir = "results/vgg19_Hayao_coco"
-img_style_2_dir = "results/vgg16_Hayao_init_epoch_0"
+img_style_2_dir = "results/vgg19_Hayao_init_epoch_0"
 
 style_1 = os.path.basename(img_style_1_dir)
 style_2 = os.path.basename(img_style_2_dir)
@@ -43,6 +43,5 @@ for img_name in image_list:
     img_composite.save(os.path.join("results", "labelbox", f"{style_2}_vs_VGG19", new_img_name))
     with open(os.path.join("results", "labelbox", f"{style_2}_vs_VGG19", "image_pairs.yaml"), 'w') as outfile:
         yaml.dump(img_pairs, outfile, default_flow_style=False)
-    
     
     

@@ -4,3 +4,5 @@ __pycache__
 dataset.zip
 vgg19.npy
 logs
+results
+vgg19_weight
