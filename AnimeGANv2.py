@@ -117,7 +117,7 @@ class AnimeGANv2(object) :
 
     def discriminator(self, x_init, reuse=False, scope="discriminator"):
 
-            D = D_vit(x_init)
+            D = D_vit(x_init, scope, reuse=reuse)
 
             return D
 
