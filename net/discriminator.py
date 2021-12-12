@@ -36,7 +36,7 @@ def D_vit(x_init, image_size=256, patch_size=6, projection_dim=64, num_heads=4, 
     # Compute the mean and the variance of the training data for normalization.
     # data_augmentation.layers[0].adapt(x_train)
 
-    inputs = layers.Input(input_tensor=x_init)
+    inputs = layers.Input(tensor=x_init)
     # Augment data.
     # augmented = data_augmentation(inputs)
     # Create patches.
