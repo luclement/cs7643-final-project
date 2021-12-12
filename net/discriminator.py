@@ -20,7 +20,8 @@ def D_vit(x_init, image_size=256, patch_size=6, projection_dim=64, num_heads=4, 
     transformer_units = [
         projection_dim * 2,
         projection_dim,
-    ] 
+    ]
+    num_classes = 2
     # data_augmentation = keras.Sequential(
     #     [
     #         layers.Normalization(),
