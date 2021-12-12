@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow.keras import layers
 
 class PatchEncoder(layers.Layer):
     def __init__(self, num_patches, projection_dim):

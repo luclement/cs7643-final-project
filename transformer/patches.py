@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow.keras import layers
 
 class Patches(layers.Layer):
     def __init__(self, patch_size):
