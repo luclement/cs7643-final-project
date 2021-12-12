@@ -5,7 +5,7 @@ import time
 import numpy as np
 import tensorflow as tf
 from net import generator,generator_lite
-from net.discriminator import D_net
+from net.discriminator import D_vit
 from tools.data_loader import ImageGenerator
 from tools.vgg19 import Vgg19
 
@@ -117,7 +117,7 @@ class AnimeGANv2(object) :
 
     def discriminator(self, x_init, reuse=False, scope="discriminator"):
 
-            D = D_net(x_init, self.ch, self.n_dis, self.sn, reuse=reuse, scope=scope)
+            D = D_vit(x_init)
 
             return D
 
